@@ -1,0 +1,18 @@
+- name: Add repository
+  yum:
+    name: "{{ rpm_repository_url }}"
+    state: present
+    disable_gpg_check: true
+- name: Disable repo for Oracle, RHEL v8
+  command:
+    cmd: dnf -qy module disable postgresql
+  when: ansible_distribution_major_version == '8'
+- name: Install PostgreSQL Server
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - 'postgresql{{ postgres_version }}-server'
+- name: Init database
+  command:
+    cmd: '/usr/pgsql-{{ postgres_version }}/bin/postgresql-{{ postgres_version }}-setup initdb'
