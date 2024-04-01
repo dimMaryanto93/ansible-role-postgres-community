@@ -8,5 +8,3 @@
 DS_Store
 
 ### default env
-defaults/*
-!defaults/*.example
