@@ -1,0 +1,6 @@
+---
+- name: Install PostgreSQL
+  hosts: ['all']
+  become: true
+  roles: 
+    - ../../ansible-role-postgres-ce

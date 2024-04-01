@@ -1,0 +1,2 @@
+---
+rpm_repository_url: https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_distribution_major_version }}-{{ ansible_userspace_architecture }}/pgdg-redhat-repo-latest.noarch.rpm
