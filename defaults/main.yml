@@ -7,4 +7,7 @@ pip_executeable: pip3
 # pg_hba_conf
 update_pg_hba_conf: true
 # postgresql ha
-enabled_postgresql_ha: true
+enabled_postgresql_ha: false
+etcd_download_url: https://github.com/etcd-io/etcd/releases/download/v{{ etcd_engine_version }}/etcd-v{{ etcd_engine_version }}-linux-amd64.tar.gz
+etcd_installation_path: /opt/etcd
+etcd_user: etcd

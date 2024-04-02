@@ -1,6 +1,8 @@
 ---
-- name: Install PostgreSQL
+- name: Install PostgreSQL HA
   hosts: ['all']
   become: true
+  vars:
+    enabled_postgresql_ha: true
   roles: 
     - ../../ansible-role-postgres-community
