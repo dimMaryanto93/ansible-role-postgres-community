@@ -6,14 +6,14 @@
 - name: Disable repo for Oracle, RHEL v8
   command:
     cmd: dnf -qy module disable postgresql
-  when: ansible_distribution_major_version == '8'
+  when: ansible_distribution_major_version | int >= 8
 - name: Install PostgreSQL Server
   yum:
     name: "{{ item }}"
     state: present
   loop:
     - 'postgresql{{ postgres_version }}-server'
-- name: Task name
+- name: Check file postgresql.conf is exists
   stat:
     path: "{{ postgres_data_dir }}/postgresql.conf"
   register: pg_init

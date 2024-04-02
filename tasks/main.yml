@@ -35,6 +35,7 @@
     loop:
       - psycopg
       - psycopg2-binary
+      - urllib3
 
 - name: Enable & Start the service
   block: 
