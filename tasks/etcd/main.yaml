@@ -1,0 +1,108 @@
+- name: Ensure group {{ etcd_user }} exists
+  ansible.builtin.group:
+    name: "{{ etcd_user }}"
+    state: present
+
+- name: Add the user {{ etcd_user }} exists
+  ansible.builtin.user:
+    name: "{{ etcd_user }}"
+    comment: user for using nexus-oss application
+    group: "{{ etcd_user }}"
+    append: yes
+
+- name: Create a directory {{ etcd_installation_path }} if it does not exist 
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '7777'
+    owner: "{{ etcd_user }}"
+    group: "{{ etcd_user }}"
+  loop:
+    - "{{ etcd_installation_path }}"
+    - "{{ etcd_working_dir }}"
+    - "{{ etcd_conf_file }}"
+
+- name: Download etcd binary from {{ etcd_download_url }}
+  ansible.builtin.unarchive:
+    remote_src: yes
+    src: "{{ etcd_download_url }}"
+    dest: "{{ etcd_installation_path }}"
+    mode: '0777'
+    owner: "{{ etcd_user }}"
+    group: "{{ etcd_user }}"
+
+- name: Give access to user {{ etcd_user }} recusively
+  file: 
+    dest: "{{ etcd_installation_path }}" 
+    owner: "{{ etcd_user }}" 
+    group: "{{ etcd_user }}" 
+    mode: '0777' 
+    recurse: yes
+
+- name: Check directory name under {{ etcd_installation_path }}
+  shell: "ls -d {{ etcd_installation_path }}/etcd-* | tail -n 1"
+  register: etcd_version_dir_name
+
+- name: Create a symbolic link for etcd
+  ansible.builtin.file:
+    src: "{{ etcd_version_dir_name.stdout }}/etcd"
+    dest: "{{ item }}/etcd"
+    owner: "{{ etcd_user }}" 
+    group: "{{ etcd_user }}" 
+    state: link
+  loop:
+    - /usr/local/bin
+    - /usr/bin
+- name: Check etcd engine version
+  command:
+    cmd: etcd -version
+  register: etcd_version
+- name: Debug version etcd
+  debug:
+    msg: "{{ etcd_version }}"
+
+- name: Create a symbolic link for etcd
+  ansible.builtin.file:
+    src: "{{ etcd_version_dir_name.stdout }}/etcdctl"
+    dest: "{{ item }}/etcdctl"
+    owner: "{{ etcd_user }}" 
+    group: "{{ etcd_user }}" 
+    state: link
+  loop:
+    - /usr/local/bin
+    - /usr/bin
+- name: Check etcdctl engine version
+  command:
+    cmd: etcdctl version
+  register: etcdctl_version
+- name: Debug version etcdctl
+  debug:
+    msg: "{{ etcdctl_version }}"
+- name: Create service file for etcd
+  template: 
+    src: etcd.service.j2 
+    dest: /usr/lib/systemd/system/etcd.service
+    mode: 644
+- name: "Create a data directory"
+  file:
+    path: "{{ etcd_working_dir }}/{{ inventory_hostname }}.etcd"
+    state: "{{ item }}"
+    owner: "{{ etcd_user }}"
+    group: "{{ etcd_user }}"
+    mode: 0755
+  with_items:
+    - absent
+    - directory
+- name: Create configuration file for etcd
+  template:
+    src: etcd.conf.j2
+    dest: "{{ etcd_conf_file }}/etcd.conf"
+    owner: "root"
+    group: "root"
+    mode: 0600
+- name: Daemon reload and start service etcd
+  ansible.builtin.systemd:
+    state: started
+    daemon_reload: yes
+    enabled: true
+    name: etcd

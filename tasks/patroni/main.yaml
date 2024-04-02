@@ -1,0 +1,32 @@
+- name: Install patroni binnary for pip
+  pip:
+    executable: "{{ pip_executeable }}"
+    name: "{{ item }}"
+    state: present
+  loop:
+    - patroni[etcd]=={{ pip_patroni_etcd_version }}
+    - cdiff
+- name: Create a symbolic link of patroni
+  ansible.builtin.file:
+    src: /usr/local/bin/patroni
+    dest: /usr/bin/patroni
+    state: link
+- name: Create a symbolic link of patroni
+  ansible.builtin.file:
+    src: /usr/local/bin/patronictl
+    dest: /usr/bin/patronictl
+    state: link
+- name: Check patroni version
+  command:
+    cmd: "{{ pip_executeable }} show patroni"
+  register: patroni_version
+- name: Debug version patroni
+  debug:
+    msg: "{{ patroni_version }}"
+- name: Check patronictl version
+  command:
+    cmd: patronictl version
+  register: patronictl_version
+- name: Debug version patronictl
+  debug:
+    msg: "{{ patronictl_version }}"

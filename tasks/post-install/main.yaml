@@ -1,0 +1,35 @@
+- name: Setup pg_hba.conf
+  postgresql_pg_hba:
+    dest: "{{ postgres_data_dir }}/pg_hba.conf"
+    contype: host
+    users: "{{ pg_hba_users_mode | default('all') }}"
+    source: "{{ pg_hba_source_mode | default('0.0.0.0/0') }}"
+    databases: "{{ pg_hba_database_mode | default('all') }}"
+    method: "{{ pg_hba_auth_method | default('scram-sha-256') }}"
+    create: true
+- name: Remove default pg_hba on 127.0.0.1/32
+  postgresql_pg_hba:
+    dest: "{{ postgres_data_dir }}/pg_hba.conf"
+    contype: host
+    users: "all"
+    source: "127.0.0.1/32"
+    databases: "all"
+    method: "scram-sha-256"
+    state: absent
+- name: Allow port listen from anywhere
+  ansible.builtin.lineinfile:
+    path: "{{ postgres_data_dir }}/postgresql.conf"
+    line: "listen_addresses = '*'"
+    state: present
+    create: yes
+- name: Set specified port in config
+  notify: pg-restart-service
+  ansible.builtin.lineinfile:
+    path: "{{ postgres_data_dir }}/postgresql.conf"
+    line: "port = 5432"
+    state: present
+    create: yes
+- name: pg-restart-service
+  systemd_service:
+    state: restarted
+    name: 'postgresql-{{ postgres_version }}'
