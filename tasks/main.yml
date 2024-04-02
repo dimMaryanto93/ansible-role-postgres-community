@@ -1,11 +1,5 @@
 ---
-- name: Debug variables
-  debug:
-    msg: '{{ item }}'
-  loop:
-    - "{{ rpm_repository_url }}"
-
-- name: Install PostgreSQL server for RetHat
+- name: Install PostgreSQL server
   block:
     - name: Install PostgreSQL server for RedHat
       include_tasks: el/main.yaml
