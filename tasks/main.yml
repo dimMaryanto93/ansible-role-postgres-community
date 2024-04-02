@@ -4,7 +4,7 @@
   vars:
     params:
       files:
-        - '{{ ansible_os_family }}-{{ ansible_distribution_major_version }}-dependencies.yaml'
+        - '{{ ansible_distribution }}-{{ ansible_distribution_major_version }}-dependencies.yaml'
       paths:
         - 'vars'
 
@@ -26,19 +26,19 @@
       state: present
   - name: Update pip engine to at least 
     pip:
-      executable: pip3
+      executable: "{{ pip_executeable }}"
       state: present
       name: pip>=21.3.1
   - name: Check pip version
     register: pip_version
     command:
-      cmd: pip3 --version
+      cmd: "{{ pip_executeable }} --version"
   - name: debug pip version
     debug:
       msg: "{{ pip_version.stdout }}"
   - name: Install default package
     pip:
-      executable: pip3
+      executable: "{{ pip_executeable }}"
       name: "{{ item }}"
       state: present
     loop:
@@ -93,3 +93,59 @@
       systemd_service:
         state: restarted
         name: 'postgresql-{{ postgres_version }}'
+
+- name: Install patroni binary
+  when: enabled_postgresql_ha
+  block:
+  - name: Install patroni binnary for pip
+    pip:
+      executable: "{{ pip_executeable }}"
+      name: "{{ item }}"
+      state: present
+    loop:
+      - patroni[etcd]=={{ pip_patroni_etcd_version }}
+  - name: Create a symbolic link of patroni
+    ansible.builtin.file:
+      src: /usr/local/bin/patroni
+      dest: /usr/bin/patroni
+      state: link
+  - name: Create a symbolic link of patroni
+    ansible.builtin.file:
+      src: /usr/local/bin/patronictl
+      dest: /usr/bin/patronictl
+      state: link
+  - name: Check patroni version
+    command:
+      cmd: "{{ pip_executeable }} show patroni"
+    register: patroni_version
+  - name: Debug version patroni
+    debug:
+      msg: "{{ patroni_version }}"
+  - name: Check patronictl version
+    command:
+      cmd: patronictl version
+    register: patronictl_version
+  - name: Debug version patronictl
+    debug:
+      msg: "{{ patronictl_version }}"
+- name: Install etcd
+  when: enabled_postgresql_ha
+  block:
+    - name: Enable module etcd3 from pip
+      pip:
+        executable: "{{ pip_executeable }}"
+        name: "{{ item }}"
+        state: present
+      loop:
+        - etcd3=={{ pip_etcd3_version }}
+    - name: Install etcd engine
+      package:
+        name: "etcd3=={{ etcd_engine_version }}"
+        state: present
+    - name: Check etcd engine version
+      command:
+        cmd: etcd version
+      register: etcd_version
+    - name: Debug version etcd
+      debug:
+        msg: "{{ etcd_version }}"

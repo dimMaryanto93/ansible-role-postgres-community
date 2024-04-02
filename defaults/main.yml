@@ -2,5 +2,9 @@ postgres_version: 15
 postgres_data_dir: "/var/lib/pgsql/{{ postgres_version }}/data/"
 postgres_port: 5432
 postgres_unix_socket: /run/postgresql
+# pip execute
+pip_executeable: pip3
 # pg_hba_conf
 update_pg_hba_conf: true
+# postgresql ha
+enabled_postgresql_ha: true
