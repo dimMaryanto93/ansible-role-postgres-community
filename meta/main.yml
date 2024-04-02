@@ -1,6 +1,6 @@
 galaxy_info:
   author: dimmaryanto93
-  role_name: postgres-ce
+  role_name: postgres_community
   description: Install PostgreSQL Community Edition for linux
   company: PT. Tabeldata Informatika
 

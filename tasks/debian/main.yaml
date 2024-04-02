@@ -11,3 +11,9 @@
   ansible.builtin.apt:
     name: postgresql-{{ postgres_version }}
     update_cache: yes
+- name: Expose port {{ postgres_port }}/tcp with ufw
+  community.general.ufw:
+    port: "{{ postgres_port }}"
+    proto: tcp
+    rule: allow
+    comment: Allow port {{ postgres_port }}/tcp access public

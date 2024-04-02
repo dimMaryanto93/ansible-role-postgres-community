@@ -1,1 +1,5 @@
 ---
+- name: pg-restart-service
+  systemd_service:
+    state: restarted
+    name: 'postgresql-{{ postgres_version }}'

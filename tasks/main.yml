@@ -14,6 +14,34 @@
       include_tasks: debian/main.yaml
       when: ansible_os_family == 'Debian'
 
+- name: Install Python package manager
+  when: update_pg_hba_conf
+  block:
+  - name: Install python package manager
+    package:
+      name: python3-pip
+      state: present
+  - name: Update pip engine to at least 
+    pip:
+      executable: pip3
+      state: present
+      name: pip>=21.3.1
+  - name: Check pip version
+    register: pip_version
+    command:
+      cmd: pip3 --version
+  - name: debug pip version
+    debug:
+      msg: "{{ pip_version.stdout }}"
+  - name: Install default package
+    pip:
+      executable: pip3
+      name: "{{ item }}"
+      state: present
+    loop:
+      - psycopg
+      - psycopg2-binary
+
 - name: Enable & Start the service
   block: 
     - name: Make sure a service unit is running
@@ -23,3 +51,41 @@
         enabled: true
         name: 'postgresql-{{ postgres_version }}'
 
+- name: Configure PostgreSQL server
+  when: update_pg_hba_conf
+  block:
+    - name: Setup pg_hba.conf
+      postgresql_pg_hba:
+        dest: "{{ postgres_data_dir }}/pg_hba.conf"
+        contype: host
+        users: "{{ pg_hba_users_mode | default('all') }}"
+        source: "{{ pg_hba_source_mode | default('0.0.0.0/0') }}"
+        databases: "{{ pg_hba_database_mode | default('all') }}"
+        method: "{{ pg_hba_auth_method | default('scram-sha-256') }}"
+        create: true
+    - name: Remove default pg_hba on 127.0.0.1/32
+      postgresql_pg_hba:
+        dest: "{{ postgres_data_dir }}/pg_hba.conf"
+        contype: host
+        users: "all"
+        source: "127.0.0.1/32"
+        databases: "all"
+        method: "scram-sha-256"
+        state: absent
+    - name: Allow port listen from anywhere
+      ansible.builtin.lineinfile:
+        path: "{{ postgres_data_dir }}/postgresql.conf"
+        line: "listen_addresses = '*'"
+        state: present
+        create: yes
+    - name: Set specified port in config
+      notify: pg-restart-service
+      ansible.builtin.lineinfile:
+        path: "{{ postgres_data_dir }}/postgresql.conf"
+        line: "port = 5432"
+        state: present
+        create: yes
+    - name: pg-restart-service
+      systemd_service:
+        state: restarted
+        name: 'postgresql-{{ postgres_version }}'
