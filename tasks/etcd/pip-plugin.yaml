@@ -1,7 +1,5 @@
 - name: Enable module etcd3 from pip
-  pip:
-    executable: "{{ pip_executeable }}"
-    name: "{{ item }}"
-    state: present
+  command:
+    cmd: "{{ pip_executeable }} install {{ item }}"
   loop:
     - etcd3=={{ pip_etcd3_version }}

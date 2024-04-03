@@ -4,7 +4,7 @@
     state: present
 - name: Update pip engine from pip3 
   command:
-    cmd: pip3 install --upgrade pip
+    cmd: "{{ pip_executeable }} install --upgrade pip"
 - name: Check pip version
   register: pip_version
   command:
@@ -13,11 +13,10 @@
   debug:
     msg: "{{ pip_version.stdout }}"
 - name: Install default package
-  pip:
-    executable: "{{ pip_executeable }}"
-    name: "{{ item }}"
-    state: present
+  command:
+    cmd: "{{ pip_executeable }} install {{ item }}"
   loop:
     - psycopg
     - psycopg2-binary
     - urllib3
+    - ipaddress

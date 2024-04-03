@@ -10,7 +10,7 @@ Type=notify
 Environment=ETCD_DATA_DIR={{ etcd_working_dir }}
 Environment=ETCD_NAME=%H
 EnvironmentFile=-{{ etcd_conf_file }}/etcd.conf
-ExecStart=/usr/bin/etcd
+ExecStart=/usr/local/bin/etcd
 Restart=always
 RestartSec=10s
 LimitNOFILE=40000

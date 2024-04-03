@@ -1,8 +1,6 @@
 - name: Install patroni binnary for pip
-  pip:
-    executable: "{{ pip_executeable }}"
-    name: "{{ item }}"
-    state: present
+  command:
+    cmd: "{{ pip_executeable }} install {{ item }}"
   loop:
     - patroni[etcd]=={{ pip_patroni_etcd_version }}
     - cdiff

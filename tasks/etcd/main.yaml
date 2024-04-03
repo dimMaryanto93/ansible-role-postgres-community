@@ -6,7 +6,7 @@
 - name: Add the user {{ etcd_user }} exists
   ansible.builtin.user:
     name: "{{ etcd_user }}"
-    comment: user for using nexus-oss application
+    comment: user for using etcd application
     group: "{{ etcd_user }}"
     append: yes
 
@@ -37,6 +37,7 @@
     owner: "{{ etcd_user }}" 
     group: "{{ etcd_user }}" 
     mode: '0777' 
+    state: directory 
     recurse: yes
 
 - name: Check directory name under {{ etcd_installation_path }}
@@ -61,7 +62,7 @@
   debug:
     msg: "{{ etcd_version }}"
 
-- name: Create a symbolic link for etcd
+- name: Create a symbolic link for etcdctl
   ansible.builtin.file:
     src: "{{ etcd_version_dir_name.stdout }}/etcdctl"
     dest: "{{ item }}/etcdctl"
@@ -73,7 +74,7 @@
     - /usr/bin
 - name: Check etcdctl engine version
   command:
-    cmd: etcdctl version
+    cmd: etcdctl -version
   register: etcdctl_version
 - name: Debug version etcdctl
   debug:

@@ -1,10 +1,8 @@
 dependencies:
-  - 'https://rpmfind.net/linux/centos/8-stream/PowerTools/x86_64/os/Packages/perl-IO-Tty-1.12-11.el8.x86_64.rpm'
-  - 'https://rpmfind.net/linux/centos/8-stream/PowerTools/x86_64/os/Packages/perl-IPC-Run-0.99-1.el8.noarch.rpm'
-  - 'perl-Time-HiRes'
-  - 'libicu-devel'
-  - 'perl-Test-Simple'
-pip_patroni_etcd_version: 2.1.4
+  - 'centos-release-scl-rh'
+  - 'llvm-toolset-7-clang'
+  - 'python-ipaddress'
+pip_patroni_etcd_version: 2.0.2
 pip_etcd3_version: 0.10.0
 etcd_engine_version: 3.3.11
 haproxy_engine_version: 1.5.18
