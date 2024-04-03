@@ -12,13 +12,20 @@
     name: "{{ item }}"
     state: present
   loop: "{{ dependencies }}"
+  when: enabled_postgresql_ha
 - name: Install PostgreSQL Server
   yum:
     name: "{{ item }}"
     state: present
   loop:
     - 'postgresql{{ postgres_version }}-server'
+- name: Install PostgreSQL Server Devel for HA
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
     - 'postgresql{{ postgres_version }}-devel'
+  when: enabled_postgresql_ha
 - name: Check file postgresql.conf is exists
   stat:
     path: "{{ postgres_data_dir }}/postgresql.conf"
