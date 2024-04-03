@@ -2,11 +2,9 @@
   package:
     name: python3-pip
     state: present
-- name: Update pip engine to at least 
-  pip:
-    executable: "{{ pip_executeable }}"
-    state: present
-    name: pip>=21.3.1
+- name: Update pip engine from pip3 
+  command:
+    cmd: pip3 install --upgrade pip
 - name: Check pip version
   register: pip_version
   command:
