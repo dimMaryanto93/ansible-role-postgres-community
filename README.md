@@ -32,6 +32,7 @@ Atau temen-temen bisa menggunakan `requirement.yaml` file and install menggunaka
 collections:
   - ansible.posix
   - community.postgresql
+  - community.general
 ```
 
 Role Variables
