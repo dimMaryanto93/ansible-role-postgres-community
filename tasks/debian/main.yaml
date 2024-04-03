@@ -1,12 +1,18 @@
-- name: Add specified repository into sources list
-  ansible.builtin.apt_repository:
-    repo: "deb https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+- name: Install depedency for postgresql-devel
+  package: 
+    name: "{{ item }}"
     state: present
-    filename: pgdg.list
+  loop: "{{ dependencies }}"
+  when: enabled_postgresql_ha
 - name: Add apt-key
   ansible.builtin.get_url:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
     dest: /etc/apt/keyrings/pgdg.asc
+- name: Add specified repository into sources list
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/pgdg.asc] https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+    state: present
+    filename: pgdg.list
 - name: Update repositories cache and install "postgresql" package
   ansible.builtin.apt:
     name: postgresql-{{ postgres_version }}
