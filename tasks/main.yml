@@ -49,10 +49,17 @@
   when: enabled_postgresql_ha
   include_tasks: patroni/main.yaml
   
-- name: Install etcd plugin pip
-  when: enabled_postgresql_ha
-  include_tasks: etcd/pip-plugin.yaml
-    
 - name: Install etcd database
   when: enabled_postgresql_ha
-  include_tasks: etcd/main.yaml
+  block:
+    - name: Install etcd plugin pip
+      when: enabled_postgresql_ha
+      include_tasks: etcd/pip-plugin.yaml
+    - name: Setup etcd database
+      include_tasks: etcd/main.yaml
+    - name: Configure firewall for RedHat distribution
+      when: ansible_os_family == 'RedHat'
+      include_tasks: etcd/firewall-cmd.yaml
+    - name: Configure firewall for Debian distribution
+      when: ansible_os_family == 'Debian'
+      include_tasks: etcd/ufw.yaml

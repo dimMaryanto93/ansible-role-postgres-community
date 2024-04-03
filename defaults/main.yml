@@ -12,4 +12,7 @@ etcd_installation_path: /opt/etcd
 etcd_user: etcd
 etcd_working_dir: /var/lib/etcd
 etcd_conf_file: /etc/etcd
+etcd_ports:
+  - 2380
+  - 2379
 

@@ -1,0 +1,8 @@
+- name: Expose port for etcd with firewall-cmd
+  ansible.posix.firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    zone: public
+    state: enabled
+    immediate: true
+  loop: "{{ etcd_ports }}"

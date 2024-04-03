@@ -1,0 +1,7 @@
+- name: Expose port etcd with ufw
+  community.general.ufw:
+    port: "{{ item }}"
+    proto: tcp
+    rule: allow
+    comment: Allow port {{ item }}/tcp access public
+  loop: "{{ etcd_ports }}"
