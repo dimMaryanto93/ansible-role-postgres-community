@@ -10,7 +10,7 @@
     group: "{{ etcd_user }}"
     append: yes
 
-- name: Create a directory {{ etcd_installation_path }} if it does not exist 
+- name: Create a directory for installation if it does not exist 
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -19,8 +19,17 @@
     group: "{{ etcd_user }}"
   loop:
     - "{{ etcd_installation_path }}"
-    - "{{ etcd_working_dir }}"
     - "{{ etcd_conf_file }}"
+
+- name: Create a directory for data if it does not exist 
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0700'
+    owner: "{{ etcd_user }}"
+    group: "{{ etcd_user }}"
+  loop:
+    - "{{ etcd_working_dir }}"
 
 - name: Download etcd binary from {{ etcd_download_url }}
   ansible.builtin.unarchive:
