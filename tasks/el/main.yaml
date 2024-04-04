@@ -12,6 +12,7 @@
     name: "{{ item }}"
     state: present
   loop: "{{ dependencies }}"
+  disable_gpg_check: true
   when: enabled_postgresql_ha
 - name: Install PostgreSQL Server
   yum:
