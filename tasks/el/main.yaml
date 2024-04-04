@@ -8,11 +8,11 @@
     cmd: dnf -qy module disable postgresql
   when: ansible_distribution_major_version | int >= 8
 - name: Install depedency for postgresql-devel
+  disable_gpg_check: true
   yum: 
     name: "{{ item }}"
     state: present
   loop: "{{ dependencies }}"
-  disable_gpg_check: true
   when: enabled_postgresql_ha
 - name: Install PostgreSQL Server
   yum:
