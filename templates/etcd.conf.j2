@@ -1,4 +1,4 @@
-ETCD_LISTEN_PEER_URLS="http://$localhost:2380"
+ETCD_LISTEN_PEER_URLS="http://localhost:2380"
 ETCD_LISTEN_CLIENT_URLS="http://localhost:2379,http://{{ ansible_host }}:2379"
 ETCD_NAME="{{ inventory_hostname }}"
 #[Clustering]

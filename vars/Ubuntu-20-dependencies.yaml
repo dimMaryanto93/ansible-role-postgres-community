@@ -8,3 +8,4 @@ haproxy_engine_version: '2.0.33-0ubuntu0.1'
 keepalived_engine_version: '1:2.0.19-2ubuntu0.2'
 service_name: 'postgresql'
 postgres_data_dir: "/etc/postgresql/{{ postgres_version }}/main/"
+etcdctl_version_cmd: 'etcdctl version'

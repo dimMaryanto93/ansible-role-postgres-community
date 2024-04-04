@@ -11,3 +11,4 @@ haproxy_engine_version: 1.8.27
 keepalived_engine_version: 2.1.5
 service_name: 'postgresql-{{ postgres_version }}'
 postgres_data_dir: "/var/lib/pgsql/{{ postgres_version }}/data/"
+etcdctl_version_cmd: 'etcdctl version'

@@ -74,7 +74,7 @@
     - /usr/bin
 - name: Check etcdctl engine version
   command:
-    cmd: etcdctl -version
+    cmd: "{{ etcdctl_version_cmd }}"
   register: etcdctl_version
 - name: Debug version etcdctl
   debug:
