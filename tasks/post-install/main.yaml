@@ -30,6 +30,6 @@
     state: present
     create: yes
 - name: pg-restart-service
-  systemd_service:
+  ansible.builtin.systemd:
     state: restarted
     name: '{{ service_name }}'
