@@ -4,6 +4,9 @@ dependencies:
   - 'perl-Time-HiRes'
   - 'libicu-devel'
   - 'perl-Test-Simple'
+  - 'readline-devel'
+  - 'bison'
+  - 'NetworkManager-initscripts-updown'
 pip_patroni_etcd_version: 2.1.4
 pip_etcd3_version: 0.10.0
 etcd_engine_version: 3.4.20
