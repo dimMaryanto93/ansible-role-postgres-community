@@ -1,6 +1,6 @@
 dependencies:
-  - 'https://rpmfind.net/linux/centos/8-stream/PowerTools/x86_64/os/Packages/perl-IPC-Run-0.99-1.el8.noarch.rpm'
-  - 'https://rpmfind.net/linux/centos/8-stream/PowerTools/x86_64/os/Packages/perl-IO-Tty-1.12-11.el8.x86_64.rpm'
+  - 'https://yum.oracle.com/repo/OracleLinux/OL9/codeready/builder/x86_64/getPackage/perl-IPC-Run-20200505.0-6.el9.noarch.rpm'
+  - 'https://yum.oracle.com/repo/OracleLinux/OL9/codeready/builder/x86_64/getPackage/perl-IO-Tty-1.16-4.el9.x86_64.rpm'
   - 'perl-Time-HiRes'
   - 'libicu-devel'
   - 'perl-Test-Simple'

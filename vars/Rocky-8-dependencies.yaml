@@ -1,6 +1,6 @@
 dependencies:
-  - 'https://rpmfind.net/linux/centos/8-stream/PowerTools/x86_64/os/Packages/perl-IO-Tty-1.12-11.el8.x86_64.rpm'
-  - 'https://rpmfind.net/linux/centos/8-stream/PowerTools/x86_64/os/Packages/perl-IPC-Run-0.99-1.el8.noarch.rpm'
+  - 'https://dl.rockylinux.org/pub/rocky/8/PowerTools/x86_64/os/Packages/p/perl-IO-Tty-1.12-11.el8.x86_64.rpm'
+  - 'https://dl.rockylinux.org/pub/rocky/8/Devel/x86_64/os/Packages/p/perl-IPC-Run-0.99-1.el8.noarch.rpm'
   - 'perl-Time-HiRes'
   - 'libicu-devel'
   - 'perl-Test-Simple'
