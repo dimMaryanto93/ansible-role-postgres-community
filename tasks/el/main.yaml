@@ -28,7 +28,7 @@
     name: "{{ item }}"
     state: present
   loop:
-    - "postgresql{{ postgres_version }}-devel"
+    - "postgresql{{ postgres_version }}-devel{{ postgres_minor_version | default('') }}"
   when: enabled_postgresql_ha
 - name: Check file postgresql.conf is exists
   stat:
