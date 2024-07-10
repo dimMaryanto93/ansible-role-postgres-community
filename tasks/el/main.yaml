@@ -22,13 +22,13 @@
     name: "{{ item }}"
     state: present
   loop:
-    - 'postgresql{{ postgres_version }}-server'
+    - "postgresql{{ postgres_version }}-server{{ postgres_minor_version | default('') }}"
 - name: Install PostgreSQL Server Devel for HA
   yum:
     name: "{{ item }}"
     state: present
   loop:
-    - 'postgresql{{ postgres_version }}-devel'
+    - "postgresql{{ postgres_version }}-devel"
   when: enabled_postgresql_ha
 - name: Check file postgresql.conf is exists
   stat:
@@ -36,7 +36,7 @@
   register: pg_init
 - name: Init database
   command:
-    cmd: '/usr/pgsql-{{ postgres_version }}/bin/postgresql-{{ postgres_version }}-setup initdb'
+    cmd: "/usr/pgsql-{{ postgres_version }}/bin/postgresql-{{ postgres_version }}-setup initdb"
   when: not pg_init.stat.exists
 - name: Expose port {{ postgres_port }}/tcp with firewall-cmd
   ansible.posix.firewalld:
